@@ -11884,7 +11884,7 @@ div#notebook {
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">urllib</span>
@@ -11962,7 +11962,7 @@ line 5...</p>
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
@@ -11976,8 +11976,8 @@ line 5...</p>
                 <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
                     <span class="n">master_file</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
-<span class="n">create_master_turnstile_file</span><span class="p">([</span><span class="s1">&#39;turnstile_240617.txt&#39;</span><span class="p">,</span><span class="s1">&#39;turnstile_170617.txt&#39;</span><span class="p">,</span>
-                              <span class="s1">&#39;turnstile_100617.txt&#39;</span><span class="p">,</span><span class="s1">&#39;turnstile_030617.txt&#39;</span><span class="p">],</span><span class="s1">&#39;master_file.txt&#39;</span><span class="p">)</span>
+<span class="n">create_master_turnstile_file</span><span class="p">([</span><span class="s1">&#39;turnstile_170624.txt&#39;</span><span class="p">,</span><span class="s1">&#39;turnstile_170617.txt&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;turnstile_170610.txt&#39;</span><span class="p">,</span><span class="s1">&#39;turnstile_170603.txt&#39;</span><span class="p">],</span><span class="s1">&#39;master_file.txt&#39;</span><span class="p">)</span>
 </pre></div>
 
 </div>
@@ -13064,7 +13064,8 @@ Below, you will find an example of how to draw histogramns with Pandas and Matpl
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>Non Normal Distribution is there. Distribution between rainy and non-rainy days is same.</p>
+<p>Non Normal Distribution is there. Distribution between rainy and non-rainy days is same.
+This is a  skewed right distribution.</p>
 
 </div>
 </div>
@@ -13223,41 +13224,28 @@ mean of entries when it's not raining=1090.278780151855</p>
 <div class=" highlight hl-ipython2"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="k">def</span> <span class="nf">reducer</span><span class="p">():</span>
-    
-    <span class="n">num_of_entries</span><span class="o">=</span><span class="mi">0</span>
-    
-    <span class="n">old_num</span><span class="o">=</span><span class="bp">None</span>
-    
+    <span class="n">old_unit</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="n">total_entires</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="c1"># input comes from STDIN</span>
     <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">:</span>
-        
-        <span class="c1">#split line </span>
-        <span class="n">data</span><span class="o">=</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="o">!=</span><span class="mi">2</span><span class="p">:</span>
-            
-            <span class="c1">#skip if something gone wrong</span>
+        <span class="c1"># parse the input we got from mapper.py</span>
+        <span class="n">unit</span><span class="p">,</span> <span class="n">entries_hourly</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">entries_hourly</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">entries_hourly</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
             <span class="k">continue</span>
-            
-        <span class="c1">#for same unit </span>
-        <span class="k">if</span> <span class="n">old_num</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">old_num</span><span class="p">:</span>
-            
-            <span class="n">num_of_entries</span> <span class="o">+=</span><span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-        
-        <span class="c1">#for new unit</span>
-        <span class="k">else</span><span class="p">:</span>
-            
-            <span class="k">if</span> <span class="n">old_num</span><span class="p">:</span>
-                
-                <span class="k">print</span> <span class="s1">&#39;{0}</span><span class="se">\t</span><span class="s1">{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">old_num</span><span class="p">,</span><span class="n">num_of_entries</span><span class="p">)</span>
-                
-            <span class="n">old_num</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-                
-            <span class="n">num_of_entries</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-    
-    <span class="c1">#print old num and noofentries</span>
-    <span class="k">if</span> <span class="n">old_num</span><span class="p">:</span>
-        
-        <span class="k">print</span> <span class="s1">&#39;{0}</span><span class="se">\t</span><span class="s1">{1}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">old_num</span><span class="p">,</span><span class="n">num_of_entries</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">old_unit</span> <span class="ow">and</span> <span class="n">old_unit</span> <span class="o">!=</span> <span class="n">unit</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="se">\t</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">old_unit</span><span class="p">,</span> <span class="n">total_entires</span><span class="p">))</span>
+            <span class="n">old_unit</span> <span class="o">=</span> <span class="n">unit</span>
+            <span class="n">total_entires</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="n">old_unit</span> <span class="o">=</span> <span class="n">unit</span>
+        <span class="n">total_entires</span> <span class="o">=</span> <span class="n">entries_hourly</span>
+
+    <span class="k">if</span> <span class="n">old_unit</span> <span class="o">!=</span> <span class="bp">None</span> <span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="se">\t</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">old_unit</span><span class="p">,</span> <span class="n">total_entires</span><span class="p">))</span>
 
 <span class="n">reducer</span><span class="p">()</span>
 <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;mapper_result.txt&#39;</span><span class="p">)</span>
